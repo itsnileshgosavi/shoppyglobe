@@ -1,4 +1,4 @@
-# ShoppyGlobe - An E-commerce Website
+# [ShoppyGlobe - An E-commerce Website](https://github.com/itsnileshgosavi/shoppyglobe)
 
 ## Description
 
@@ -47,5 +47,5 @@ npm run dev
 
 5. Open http://localhost:5173 in your browser
 
-
+## View Deployed App at [https://shoppyglobe.nileshgosavi.tech/](https://shoppyglobe.nileshgosavi.tech/)
 
