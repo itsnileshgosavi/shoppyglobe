@@ -22,6 +22,7 @@ const Header = () => {
     if (savedCart) {
       const parsedCart = JSON.parse(savedCart);
       dispatch(setCart(parsedCart));
+      console.log("Cart loaded from local storage");
       setLoaded(true);
     }
     
@@ -33,6 +34,7 @@ const Header = () => {
     if(loaded){
       setTimeout(() => {
         localStorage.setItem("cart", JSON.stringify(cart));
+        console.log("Cart saved to local storage");
       }, 1000);
     }
   }, [cart]);
