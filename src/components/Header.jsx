@@ -31,7 +31,9 @@ const Header = () => {
   //function to save cart to local storage
   useEffect(() => {
     if(loaded){
-      localStorage.setItem("cart", JSON.stringify(cart));
+      setTimeout(() => {
+        localStorage.setItem("cart", JSON.stringify(cart));
+      }, 1000);
     }
   }, [cart]);
   

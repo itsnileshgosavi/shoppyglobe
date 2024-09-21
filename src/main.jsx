@@ -7,6 +7,7 @@ import { RouterProvider } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import { lazy, Suspense } from 'react'
 import Loading from './components/Loading.jsx'
+
 const Cart = lazy(() => import('./pages/Cart.jsx'));
 const Products = lazy(() => import('./pages/Products.jsx'));
 const Checkout = lazy(() => import('./pages/Checkout.jsx'));
@@ -14,6 +15,8 @@ const BestSellers = lazy(() => import('./pages/BestSellers.jsx'));
 const Featured = lazy(() => import('./pages/Featured.jsx'));
 const ProductDetails = lazy(() => import('./pages/ProductDetails.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
+const SignIn = lazy(() => import('./pages/SignIn.jsx'));
+const SignUp = lazy(() => import('./pages/SignUp.jsx'));
 
 const router = createBrowserRouter([
   {
@@ -47,6 +50,14 @@ const router = createBrowserRouter([
       {
         path:"/cart",
         element:<Suspense fallback={<Loading/>}><Cart/></Suspense>,
+      },
+      {
+        path:"/signin",
+        element:<Suspense fallback={<Loading/>}><SignIn/></Suspense>,
+      },
+      {
+        path:"/signup",
+        element:<Suspense fallback={<Loading/>}><SignUp/></Suspense>,
       }
     ],
     errorElement: <Suspense fallback={<Loading/>}><NotFound/></Suspense>,
