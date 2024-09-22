@@ -16,28 +16,32 @@ const Header = () => {
   const dispatch = useDispatch();
 
 
-  //function to load cart from local storage
-  useEffect(() => {
+ // Load cart from localStorage on initial render
+ useEffect(() => {
+  if (typeof window !== "undefined") {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       const parsedCart = JSON.parse(savedCart);
       dispatch(setCart(parsedCart));
       console.log("Cart loaded from local storage");
-      setLoaded(true);
     }
-    
-  }, []);
+    setLoaded(true);
+  }
+}, [dispatch]); // Added dispatch as a dependency for safety
 
+// Save cart to localStorage when cart or loaded changes
+useEffect(() => {
+  if (loaded) {
+    const saveCartToLocalStorage = () => {
+      localStorage.setItem("cart", JSON.stringify(cart));
+      console.log("Cart saved to local storage");
+    };
 
-  //function to save cart to local storage
-  useEffect(() => {
-    if(loaded){
-      setTimeout(() => {
-        localStorage.setItem("cart", JSON.stringify(cart));
-        console.log("Cart saved to local storage");
-      }, 1000);
-    }
-  }, [cart]);
+    const timeoutId = setTimeout(saveCartToLocalStorage, 1000);
+    return () => clearTimeout(timeoutId); // Cleanup timeout on component unmount or before the next effect
+  }
+}, [cart, loaded]); // Depend on both cart and loaded to trigger correctly
+
   
   
   return (
