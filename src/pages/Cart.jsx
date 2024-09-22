@@ -3,8 +3,10 @@ import CartItem from "../components/CartItem";
 import { Link } from "react-router-dom";
 import cart_image from "../assets/img/empty-cart.png";
 
+
 function Cart() {
   const cart = useSelector((state) => state.cart); //gettting cart from redux store
+  const { user } = useSelector((state) => state.user);
   return (
     <div className="flex flex-col items-center justify-center">
       <div>
@@ -22,7 +24,8 @@ function Cart() {
               <p className="text-xl font-mono font-medium">${cart.total.toFixed(2)}</p>
             </div>
           </div>
-          <Link to="/checkout">
+          {user.id !== 0 ? (
+            <Link to="/checkout">
             <button
               className={` p-3 shadow-xl rounded-lg text-white my-2 transition-all hover:scale-105 ease-in-out duration-500 ${
                 cart.products.length === 0
@@ -34,6 +37,20 @@ function Cart() {
               Checkout
             </button>
           </Link>
+          ):(
+            <Link to="/signin">
+            <button
+              className={` p-3 shadow-xl rounded-lg text-white my-2 transition-all hover:scale-105 ease-in-out duration-500 ${
+                cart.products.length === 0
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-blue-500"
+              }`}
+              disabled={cart.products.length === 0}
+            >
+             Sign In to Checkout
+            </button>
+          </Link>
+          )}
         </div>
       )}
       {/* if the cart is empty showing the following to user */}

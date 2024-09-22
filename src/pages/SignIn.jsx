@@ -1,13 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/img/logo.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setUser } from "../utils/redux/userSlice";
+import { toast } from "sonner";
 
 const SignIn = () => {
     const [error, setError] = useState(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-   const navigate = useNavigate();
+    const navigate = useNavigate();
+    const { user } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      if (user.id !== 0) {
+        navigate("/");
+      }
+    }, [user, navigate]);
    const handleSignIn = async(e) => {
     e.preventDefault();
   try {
@@ -22,17 +34,21 @@ const SignIn = () => {
           password: password,
         }),
       });
+      const d = await response.json();
       if (!response.ok) {
-        throw new Error("Failed to fetch data from API. The Api responded with code " + response.status + " and message is " + response.statusText);
+        throw new Error(d.message);
       }else{
-          const data = await response.json();
-          alert("Login Successful");
+         
+          console.log(d.user);
+          toast.success(d.message);
+          dispatch(setUser(d.user));
           navigate("/");
       }
     
   } catch (error) {
-    console.log(error)
-    setError("something went wrong");
+    console.log(error.message);
+    toast.error(error.message);
+    setError(error.message); 
   }
         
    }

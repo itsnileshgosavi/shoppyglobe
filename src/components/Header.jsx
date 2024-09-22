@@ -6,50 +6,61 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCart } from "../utils/redux/cartSlice";
-
+import { setUser } from "../utils/redux/userSlice";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const Header = () => {
   const cartQuantity = useSelector((state) => state.cart.quantity); //getting cart quantity from redux store
   const [menuactive, setMenuactive] = useState(false); //setting dropdown menuactive state for mobile devices
-  const [loaded, setLoaded] = useState(false);//using loaded flag to prevent overwriting cart in local storage
+  const [loaded, setLoaded] = useState(false); //using loaded flag to prevent overwriting cart in local storage
   const cart = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-
- // Load cart from localStorage on initial render
- useEffect(() => {
-  if (typeof window !== "undefined") {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      const parsedCart = JSON.parse(savedCart);
-      dispatch(setCart(parsedCart));
-      console.log("Cart loaded from local storage");
+  useEffect(() => {
+    const AuthToken = Cookies.get("authtoken");
+    if (AuthToken) {
+      const payload = jwtDecode(AuthToken);
+      dispatch(setUser(payload.user));
     }
-    setLoaded(true);
-  }
-}, [dispatch]); // Added dispatch as a dependency for safety
+  }, [dispatch]);
 
-// Save cart to localStorage when cart or loaded changes
-useEffect(() => {
-  if (loaded) {
-    const saveCartToLocalStorage = () => {
-      localStorage.setItem("cart", JSON.stringify(cart));
-      console.log("Cart saved to local storage");
-    };
+  // Load cart from localStorage on initial render
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        dispatch(setCart(parsedCart));
+        console.log("Cart loaded from local storage");
+      }
+      setLoaded(true);
+    }
+  }, [dispatch]); // Added dispatch as a dependency for safety
 
-    const timeoutId = setTimeout(saveCartToLocalStorage, 1000);
-    return () => clearTimeout(timeoutId); // Cleanup timeout on component unmount or before the next effect
-  }
-}, [cart, loaded]); // Depend on both cart and loaded to trigger correctly
+  // Save cart to localStorage when cart or loaded changes
+  useEffect(() => {
+    if (loaded) {
+      const saveCartToLocalStorage = () => {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        console.log("Cart saved to local storage");
+      };
 
-  
-  
+      const timeoutId = setTimeout(saveCartToLocalStorage, 1000);
+      return () => clearTimeout(timeoutId); // Cleanup timeout on component unmount or before the next effect
+    }
+  }, [cart, loaded]); // Depend on both cart and loaded to trigger correctly
+
+  const handleLogout = () => {
+    Cookies.remove("authtoken");
+    dispatch(setUser({id: 0, firstName: "Guest", lastName: "", email: ""}));
+  };
+
   return (
     <nav className="flex justify-around items-center border shadow-md sticky top-0 left-0 right-0 bg-slate-50 z-50 uppercase">
       <Link to="/">
-        <div
-          className="flex items-center md:m-2 p-1 md:p-2 cursor-pointer"
-        >
+        <div className="flex items-center md:m-2 p-1 md:p-2 cursor-pointer">
           <img src={logo} alt="logo" />
           <h1 className="mx-3 text-lg lg:text-3xl font-sans font-extrabold">
             ShoppyGlobe
@@ -77,6 +88,29 @@ useEffect(() => {
             Featured
           </NavLink>
         </li>
+
+        {user.id !== 0 ? (
+          <>
+            <li
+              className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
+            >
+              <NavLink className="p-5" to="/profile">
+                Profile ({user.firstName})
+              </NavLink>
+            </li>
+            <li
+              className={`cursor-pointer text-red-500 hover:scale-105 hover:text-red-700 `}
+              onClick={() => {handleLogout() }}
+            >
+              LogOut
+            </li>
+          </>
+        ):( <li
+          className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
+        ><NavLink to="/signin">
+          Login
+        </NavLink>
+        </li>)}
       </ul>
       <div className="m-2 p-2 cursor-pointer relative">
         <NavLink to="/cart">
@@ -102,7 +136,6 @@ useEffect(() => {
           <div
             id="dropdown"
             className="flex flex-col absolute top-15 right-0 bg-white p-5 rounded-md shadow-xl swing-in-top"
-            
           >
             <ul className="text-xl">
               <li

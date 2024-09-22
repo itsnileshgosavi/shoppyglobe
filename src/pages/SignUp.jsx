@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../assets/img/logo.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const SignUp = () => {
     const [error, setError] = useState(null);
@@ -10,6 +12,13 @@ const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const { user } = useSelector((state) => state.user);
+
+    useEffect(() => {
+      if (user.id !== 0) {
+        navigate("/");
+      }
+    }, [user, navigate]);
     const handleSignUp = async (e) => {
         e.preventDefault();
         try {
@@ -30,12 +39,13 @@ const SignUp = () => {
             throw new Error("Failed to fetch data from API. The Api responded with code " + response.status + " and message is " + response.statusText);
           } else {
             const data = await response.json();
-            alert("Registration Successful");
+            toast.success(data.message);
             navigate("/signin");
           }
 
         } catch (error) {
           console.log(error);
+          toast.error(error.message);
           setError("something went wrong");
         }}
   return (
