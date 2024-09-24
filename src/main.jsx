@@ -17,7 +17,7 @@ const ProductDetails = lazy(() => import('./pages/ProductDetails.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 const SignIn = lazy(() => import('./pages/SignIn.jsx'));
 const SignUp = lazy(() => import('./pages/SignUp.jsx'));
-
+const ProfilePage = lazy(() => import('./pages/ProfilePage.jsx'));
 const router = createBrowserRouter([
   {
     path: '/',
@@ -58,6 +58,10 @@ const router = createBrowserRouter([
       {
         path:"/signup",
         element:<Suspense fallback={<Loading/>}><SignUp/></Suspense>,
+      },
+      {
+        path:"/profile",
+        element:<Suspense fallback={<Loading/>}><ProfilePage/></Suspense>,
       }
     ],
     errorElement: <Suspense fallback={<Loading/>}><NotFound/></Suspense>,

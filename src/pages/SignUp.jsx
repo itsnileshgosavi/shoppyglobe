@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
-
+import Spinner from "../components/Spinner";
 const SignUp = () => {
     const [error, setError] = useState(null);
     const [firstName, setFirstName] = useState("");
@@ -13,6 +13,7 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.user);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
       if (user.id !== 0) {
@@ -22,7 +23,8 @@ const SignUp = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         try {
-          const response = await fetch("http://localhost:8000/api/user/register", {
+          setLoading(true);
+          const response = await fetch("https://shoppyglobe-backend.nileshgosavi.tech/api/user/register", {
             method: "POST",
             credentials: "include",
             headers: {
@@ -47,7 +49,10 @@ const SignUp = () => {
           console.log(error);
           toast.error(error.message);
           setError("something went wrong");
-        }}
+        }finally{
+          setLoading(false);
+        }
+      }
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="flex items-center justify-center">
@@ -84,13 +89,15 @@ const SignUp = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             {error && <p className="text-red-500">{error}</p>}
-            <input
+            <button
               className="w-full p-2 bg-gray-50 rounded-full font-bold text-gray-900 border-[4px] border-gray-700 hover:border-red-500 transition-all duration-200"
               type="submit"
               onClick={(e) => {
                 handleSignUp(e);
               }}
-            />
+            >
+              {loading ? <Spinner /> : "Sign Up"}
+            </button>
             <p>
               already have an account?
               <Link

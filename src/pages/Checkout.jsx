@@ -4,6 +4,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { emptyCart } from "../utils/redux/cartSlice";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 function Checkout() {
   const cart = useSelector((state) => state.cart);
@@ -17,8 +20,16 @@ function Checkout() {
     address: "",
     pincode: "",
   });
-
+  const navigate = useNavigate();
   const dispatch = useDispatch(); // Initialize useDispatch hook
+
+  const { user } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user.id == 0) {
+      navigate("/signin");
+    }
+  }, [user, navigate]);
 
   //function to handle form submission
   const handlePlaceOrder = (e) => {

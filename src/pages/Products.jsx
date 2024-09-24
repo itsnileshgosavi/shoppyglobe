@@ -6,7 +6,7 @@ import useFetch from "../utils/helper/useFetch";
 const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchBy, setSearchBy] = useState("name");
-  const { data, loading, error } =  useFetch("https://dummyjson.com/products?limit=0&skip=0");
+  const { data, loading, error } =  useFetch("https://dummyjson.com/products?limit=60&skip=20");
   
 //using useeffect to setfiltered products whenever the data changes
   useEffect(() => {

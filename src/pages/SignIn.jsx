@@ -6,14 +6,18 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setUser } from "../utils/redux/userSlice";
 import { toast } from "sonner";
+import Spinner from "../components/Spinner";
+
 
 const SignIn = () => {
     const [error, setError] = useState(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.user);
     const dispatch = useDispatch();
+    
 
     useEffect(() => {
       if (user.id !== 0) {
@@ -23,11 +27,13 @@ const SignIn = () => {
    const handleSignIn = async(e) => {
     e.preventDefault();
   try {
-    const response = await fetch("http://localhost:8000/api/user/signin", {
+    setLoading(true);
+    const response = await fetch("https://shoppyglobe-backend.nileshgosavi.tech/api/user/signin", {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "https://shoppyglobe-backend.nileshgosavi.tech",
         },
         body: JSON.stringify({
           email: email,
@@ -49,6 +55,8 @@ const SignIn = () => {
     console.log(error.message);
     toast.error(error.message);
     setError(error.message); 
+  }finally{
+    setLoading(false);
   }
         
    }
@@ -74,11 +82,13 @@ const SignIn = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             {error && <p className="text-red-500">{error}</p>}
-            <input
+            <button
               className="w-full p-2 bg-gray-50 rounded-full font-bold text-gray-900 border-[4px] border-gray-700 hover:border-red-500 transition-all duration-200"
               type="submit"
               onClick={(e) => {handleSignIn(e)}}
-            />
+            >
+              {loading ? <Spinner /> : "Sign In"}
+            </button>
             <p>
               Don't have an account?
               <Link
