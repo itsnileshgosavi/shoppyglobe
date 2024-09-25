@@ -47,7 +47,6 @@ const SignUp = () => {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "https://shoppyglobe-backend.nileshgosavi.tech",
         },
         body: JSON.stringify({
           firstName,

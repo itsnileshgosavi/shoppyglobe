@@ -178,7 +178,7 @@ const Header = () => {
                   </li>
                   <li
                     className={`cursor-pointer text-red-500 hover:scale-105 hover:text-red-700 `}
-                    onClick={() => { handleLogout() }}
+                    onClick={() => { handleLogout()}}
                   >
                     LogOut
                   </li>
