@@ -54,7 +54,7 @@ const Header = () => {
 
   const handleLogout = () => {
     Cookies.remove("authtoken");
-    dispatch(setUser({id: 0, firstName: "Guest", lastName: "", email: ""}));
+    dispatch(setUser({ id: 0, firstName: "Guest", lastName: "", email: "" }));
   };
 
   return (
@@ -100,16 +100,16 @@ const Header = () => {
             </li>
             <li
               className={`cursor-pointer text-red-500 hover:scale-105 hover:text-red-700 `}
-              onClick={() => {handleLogout() }}
+              onClick={() => { handleLogout() }}
             >
               LogOut
             </li>
           </>
-        ):( <li
+        ) : (<li
           className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
         ><NavLink to="/signin">
-          Login
-        </NavLink>
+            Login
+          </NavLink>
         </li>)}
       </ul>
       <div className="m-2 p-2 cursor-pointer relative">
@@ -135,9 +135,9 @@ const Header = () => {
         {menuactive && (
           <div
             id="dropdown"
-            className="flex flex-col absolute top-15 right-0 bg-white p-5 rounded-md shadow-xl swing-in-top"
+            className="flex flex-col absolute top-15 right-2 bg-white px-5 py-2 rounded-md shadow-xl swing-in-top"
           >
-            <ul className="text-xl">
+            <ul className="text-sm space-y-2">
               <li
                 className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
               >
@@ -166,6 +166,29 @@ const Header = () => {
                   Best Sellers
                 </NavLink>
               </li>
+              
+              {user.id !== 0 ? (
+                <>
+                  <li
+                    className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
+                  >
+                    <NavLink className="p-0" to="/profile">
+                      Profile
+                    </NavLink>
+                  </li>
+                  <li
+                    className={`cursor-pointer text-red-500 hover:scale-105 hover:text-red-700 `}
+                    onClick={() => { handleLogout() }}
+                  >
+                    LogOut
+                  </li>
+                </>
+              ) : (<li
+                className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
+              ><NavLink to="/signin" className="p-0">
+                  Login
+                </NavLink>
+              </li>)}
             </ul>
           </div>
         )}

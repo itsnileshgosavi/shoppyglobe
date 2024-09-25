@@ -7,7 +7,7 @@ const ProfilePage = () => {
     const { firstName, lastName, email, profilePhotoUrl } = user
     return (
         <div className="bg-white min-h-screen flex items-center justify-center">
-            <div className="bg-red-100 p-8 rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-red-slate-200 p-8 rounded-lg shadow-lg max-w-md w-full">
                 <div className="text-center mb-6">
                     {profilePhotoUrl ? (
                         <img
@@ -23,9 +23,9 @@ const ProfilePage = () => {
 
                 <div className="space-y-4">
 
-                    <div className="bg-blue-100 p-4 rounded">
-                        <h2 className="text-blue-700 font-semibold">Email</h2>
-                        <p className="text-blue-900">{email}</p>
+                    <div className="bg-gray-50 p-4 rounded flex flex-col justify-center items-center space-y-2">
+                        <h2 className="text-gray-400 font-semibold">Email</h2>
+                        <p className="text-gray-700">{email}</p>
                     </div>
                 </div>
             </div>
