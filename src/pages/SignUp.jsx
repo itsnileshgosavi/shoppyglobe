@@ -27,16 +27,16 @@ const SignUp = () => {
     e.preventDefault();
     try {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{6}$/;
       if (firstName.trim() === "" || lastName.trim() === "" || email.trim() === "" || password.trim() === "") {
         toast.error("All fields are required");
         setError("All fields are required");
         return;
-      }else if(!email.match(emailRegex)){
+      }else if(!email.test(emailRegex)){
         toast.error("Invalid email address");
         setError("Invalid email address");
         return;
-      }else if(!password.match(passwordRegex)){
+      }else if(!password.test(passwordRegex)){
         toast.error("Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character");
         setError("Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character");
         return;
