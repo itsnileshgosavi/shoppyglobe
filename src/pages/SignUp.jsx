@@ -27,18 +27,18 @@ const SignUp = () => {
     e.preventDefault();
     try {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{6}$/;
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z]).{6,}$/;
       if (firstName.trim() === "" || lastName.trim() === "" || email.trim() === "" || password.trim() === "") {
         toast.error("All fields are required");
         setError("All fields are required");
         return;
-      }else if(!email.test(emailRegex)){
+      }else if(!emailRegex.test(email)){
         toast.error("Invalid email address");
         setError("Invalid email address");
         return;
-      }else if(!password.test(passwordRegex)){
-        toast.error("Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character");
-        setError("Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character");
+      }else if(!passwordRegex.test(password)){
+        toast.error("Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number");
+        setError("Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number");
         return;
       }
       setLoading(true);
@@ -109,10 +109,11 @@ const SignUp = () => {
               name="password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500 text-wrap">{error}</p>}
             <button
               className="w-full p-2 flex items-center justify-center bg-gray-50 rounded-full font-bold text-gray-900 border-[4px] border-gray-700 hover:scale-105 active:scale-95 transition-all duration-200"
               type="submit"
+              disabled={loading}
             >
               {loading ? <Spinner /> : (
                 <>

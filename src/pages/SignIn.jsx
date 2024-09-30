@@ -84,7 +84,8 @@ const SignIn = () => {
             {error && <p className="text-red-500">{error}</p>}
             <button
               className="w-full flex items-center justify-center p-2 bg-gray-50 rounded-full font-bold text-gray-900 border-[4px] border-gray-700 hover:scale-105 active:scale-95 transition-all duration-200"
-              type="submit" >
+              type="submit"
+              disabled={loading} >
               {loading ? <Spinner /> : (
                 <>
                 {error ? <Failure message={"Sign In"} /> : "Sign In"}
