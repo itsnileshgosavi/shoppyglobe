@@ -9,6 +9,7 @@ import { setCart } from "../utils/redux/cartSlice";
 import { setUser } from "../utils/redux/userSlice";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 const Header = () => {
   const cartQuantity = useSelector((state) => state.cart.quantity); //getting cart quantity from redux store
@@ -52,8 +53,11 @@ const Header = () => {
     }
   }, [cart, loaded]); // Depend on both cart and loaded to trigger correctly
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     Cookies.remove("authtoken");
+    const response = await fetch("./api/user/logout")
+    const data = await response.json()
+    toast.success(data.message)
     dispatch(setUser({ id: 0, firstName: "Guest", lastName: "", email: "" }));
   };
 

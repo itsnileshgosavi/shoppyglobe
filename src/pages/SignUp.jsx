@@ -42,7 +42,7 @@ const SignUp = () => {
         return;
       }
       setLoading(true);
-      const response = await fetch("https://shoppyglobe-backend.nileshgosavi.tech/api/user/register", {
+      const response = await fetch("./api/user/register", {
         method: "POST",
         credentials: "include",
         headers: {

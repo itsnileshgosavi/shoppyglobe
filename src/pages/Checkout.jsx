@@ -64,7 +64,7 @@ function Checkout() {
       return;
     }
     try {
-      const response = await fetch("https://shoppyglobe-backend.nileshgosavi.tech/api/order/place", {
+      const response = await fetch("./api/order/place", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -164,6 +164,7 @@ function Checkout() {
                       placeholder="First Name"
                       className="bg-gray-200 text-gray-900 border-0 rounded-md p-2 w-1/2 focus:bg-gray-400 focus:outline-none focus:ring-1 placeholder:text-gray-600 focus:ring-yellow-500 transition ease-in-out duration-150"
                       type="text"
+                      value={formData.fname}
                       onChange={(e) =>
                         setFormData({ ...formData, fname: e.target.value })
                       }
@@ -172,6 +173,7 @@ function Checkout() {
                       placeholder="Last Name"
                       className="bg-gray-200 text-gray-900 border-0 rounded-md p-2 w-1/2 focus:bg-gray-400 focus:outline-none focus:ring-1 placeholder:text-gray-600 focus:ring-yellow-500 transition ease-in-out duration-150"
                       type="text"
+                      value={formData.lname}
                       onChange={(e) =>
                         setFormData({ ...formData, lname: e.target.value })
                       }
@@ -181,6 +183,7 @@ function Checkout() {
                     placeholder="Email"
                     className="bg-gray-200 text-gray-900 border-0 rounded-md p-2 mb-4 focus:bg-gray-400 focus:outline-none focus:ring-1 placeholder:text-gray-600 focus:ring-blue-500 transition ease-in-out duration-150"
                     type="email"
+                    value={formData.email}
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
@@ -189,6 +192,7 @@ function Checkout() {
                     placeholder="Phone"
                     className="bg-gray-200 text-gray-900 border-0 rounded-md p-2 mb-4 focus:bg-gray-400 focus:outline-none focus:ring-1 placeholder:text-gray-600 focus:ring-blue-500 transition ease-in-out duration-150"
                     type="tel"
+                    value={formData.phone}
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })
                     }
@@ -199,11 +203,13 @@ function Checkout() {
                     onChange={(e) =>
                       setFormData({ ...formData, address: e.target.value })
                     }
+                    value={formData.address}
                   />
                   <input
                     placeholder="Pincode"
                     className="bg-gray-200 text-gray-900 border-0 rounded-md p-2 mb-4 focus:bg-gray-400 focus:outline-none focus:ring-1 placeholder:text-gray-600 focus:ring-blue-500 transition ease-in-out duration-150"
                     type="number"
+                    value={formData.pincode}
                     onChange={(e) =>
                       setFormData({ ...formData, pincode: e.target.value })
                     }

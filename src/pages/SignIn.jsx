@@ -29,7 +29,7 @@ const SignIn = () => {
     e.preventDefault();
   try {
     setLoading(true);
-    const response = await fetch("https://shoppyglobe-backend.nileshgosavi.tech/api/user/signin", {
+    const response = await fetch("./api/user/signin", {
         method: "POST",
         credentials: "include",
         headers: {
