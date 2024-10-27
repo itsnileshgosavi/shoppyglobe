@@ -1,13 +1,46 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import placeholder_profile from '../assets/img/placeholder_profile.svg'
+import Loading from '../components/Loading';
+import OrderCard from '../components/OrderCard';
 
 const ProfilePage = () => {
     const { user } = useSelector((state) => state.user)
     const { firstName, lastName, email, profilePhotoUrl } = user
+    const [orders, setOrders] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [ordersVisible, setOrdersVisible] = useState(false)
+   
+
+    const fetchOrders = async () => {
+        try {
+            setLoading(true)
+            const response = await fetch(`./api/order/get`)
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message)
+            }else{
+                setOrders(data.orders)
+                setOrdersVisible(true)
+                
+            }
+            
+        } catch (error) {
+            console.log(error)
+        }finally{
+            setLoading(false)
+        }
+       
+    }
+
+    const handleViewOrders = () => {
+        fetchOrders()
+        
+    }
+
     return (
         <div className="bg-white min-h-screen flex items-center justify-center">
-            <div className="bg-red-slate-200 p-8 rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-red-slate-200 p-8 rounded-lg flex flex-col justify-center items-center shadow-lg max-w-md w-full">
                 <div className="text-center mb-6">
                     {profilePhotoUrl ? (
                         <img
@@ -28,9 +61,25 @@ const ProfilePage = () => {
                         <p className="text-gray-700">{email}</p>
                     </div>
                 </div>
+                <div className='space-y-4'>
+                    {ordersVisible ? (
+                        <>
+                        {loading ? (
+                            <Loading />
+                        ) : (
+                           <OrderCard orders={orders} />
+                        )}
+                        </>
+                    ):(
+                        <>
+                        <button onClick={()=>handleViewOrders()} className='bg-green-500 text-white py-2 px-4 rounded'>View Orders</button>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
 };
 
 export default ProfilePage;
+           

@@ -6,11 +6,14 @@ import { useDispatch } from "react-redux";
 import { emptyCart } from "../utils/redux/cartSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import Spinner from "../components/Spinner";
 
 function Checkout() {
   const cart = useSelector((state) => state.cart);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => state.user);
 
   const [formData, setFormData] = useState({
@@ -64,6 +67,7 @@ function Checkout() {
       return;
     }
     try {
+      setLoading(true);
       const response = await fetch("./api/order/place", {
         method: "POST",
         credentials: "include",
@@ -80,11 +84,15 @@ function Checkout() {
       if (data.success) {
         setError("");
         setOrderPlaced(true);
+        toast.success(data.message);
         dispatch(emptyCart()); //empty cart on successful order
       }
     } catch (error) {
       console.log(error);
       setError(error.message);
+      toast.error(error.message);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -219,7 +227,7 @@ function Checkout() {
                     className="bg-gradient-to-r from-red-500 to-yellow-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:from-yellow-600  hover:to-red-600 transition ease-in-out duration-300"
                     type="submit"
                   >
-                    Place Order
+                   {loading ? <Spinner /> : "Place Order"}
                   </button>
                 </form>
               </div>
