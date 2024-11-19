@@ -75,43 +75,43 @@ const SignUp = () => {
     }
   }
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="flex items-center justify-center">
-        <div className="bg-gray-400  rounded-2xl  transition-all duration-200">
-          <form onSubmit={(e) => {handleSignUp(e);}} className="mx-auto flex items-center space-y-4 py-16 px-12 font-semibold text-gray-900 flex-col">
-            <img src={logo} alt="logo" />
-            <h1 className="text-black text-xl">Register to ShoppyGlobe</h1>
+    <div className="flex items-center justify-center min-h-screen w-full px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-center w-full max-w-md">
+        <div className="bg-gray-300 shadow-xl shadow-gray-700/50 rounded-2xl transition-all duration-200 w-full">
+          <form onSubmit={(e) => {handleSignUp(e);}} className="mx-auto flex items-center space-y-4 py-8 sm:py-12 lg:py-16 px-6 sm:px-8 lg:px-12 font-semibold text-gray-900 flex-col w-full">
+            <img src={logo} alt="logo" className="w-32 sm:w-40 lg:w-48" />
+            <h1 className="text-black text-lg sm:text-xl lg:text-2xl">Register to ShoppyGlobe</h1>
             <input
-              className="w-full p-2 bg-slate-300 rounded-md border border-gray-700 focus:border-blue-700 placeholder:text-gray-600 hover:border-blue-500 transition-all duration-200"
+              className="w-full p-2 sm:p-3 bg-slate-300 placeholder:text-gray-600 rounded-md border border-gray-700 focus:border-blue-700 hover:border-blue-500 transition-all duration-200 text-sm sm:text-base"
               placeholder="First Name"
               type="text"
               name="firstName"
               onChange={(e) => setFirstName(e.target.value)}
             />
             <input
-              className="w-full p-2 bg-slate-300 rounded-md border border-gray-700 focus:border-blue-700 placeholder:text-gray-600 hover:border-blue-500 transition-all duration-200"
+              className="w-full p-2 sm:p-3 bg-slate-300 placeholder:text-gray-600 rounded-md border border-gray-700 focus:border-blue-700 hover:border-blue-500 transition-all duration-200 text-sm sm:text-base"
               placeholder="Last Name"
               type="text"
               name="firstName"
               onChange={(e) => setLastName(e.target.value)}
             />
             <input
-              className="w-full p-2 bg-slate-300 rounded-md border border-gray-700 focus:border-blue-700 placeholder:text-gray-600 hover:border-blue-500 transition-all duration-200"
+              className="w-full p-2 sm:p-3 bg-slate-300 placeholder:text-gray-600 rounded-md border border-gray-700 focus:border-blue-700 hover:border-blue-500 transition-all duration-200 text-sm sm:text-base"
               placeholder="Email"
               type="email"
               name="email"
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
-              className="w-full p-2 bg-slate-300 rounded-md border border-gray-700 focus:border-blue-700 placeholder:text-gray-600  transition-all duration-200"
+              className="w-full p-2 sm:p-3 bg-slate-300 placeholder:text-gray-600 rounded-md border border-gray-700 focus:border-blue-700 hover:border-blue-500 transition-all duration-200 text-sm sm:text-base"
               placeholder="Password"
               type="password"
               name="password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            {error && <p className="text-red-500 text-wrap">{error}</p>}
+            {error && <p className="text-red-500 text-sm sm:text-base text-wrap">{error}</p>}
             <button
-              className="w-full p-2 flex items-center justify-center bg-gray-50 rounded-full font-bold text-gray-900 border-[4px] border-gray-700 hover:scale-105 active:scale-95 transition-all duration-200"
+              className="w-full flex items-center justify-center p-2 sm:p-3 bg-gray-50 rounded-full font-bold text-gray-900 border-[4px] border-gray-700 hover:scale-105 active:scale-95 transition-all duration-200 text-sm sm:text-base"
               type="submit"
               disabled={loading}
             >
@@ -121,7 +121,7 @@ const SignUp = () => {
                 </>
               )}
             </button>
-            <p className="text-black">
+            <p className="text-black text-sm sm:text-base">
               Already have an account?
               <Link
                 className="font-semibold text-red-500 hover:text-red-700 transition-all duration-200"

@@ -1,6 +1,6 @@
 import logo from "../assets/img/logo.png";
 import cart_icon from "../assets/img/cart_icon.png";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -18,6 +18,7 @@ const Header = () => {
   const cart = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const dropdownRef = useRef(null); // Add ref for dropdown container
 
   useEffect(() => {
     const AuthToken = Cookies.get("authtoken");
@@ -52,6 +53,20 @@ const Header = () => {
       return () => clearTimeout(timeoutId); // Cleanup timeout on component unmount or before the next effect
     }
   }, [cart, loaded]); // Depend on both cart and loaded to trigger correctly
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setMenuactive(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = async() => {
     Cookies.remove("authtoken");
@@ -127,75 +142,84 @@ const Header = () => {
         </NavLink>
       </div>
 
-      {/* Dropdown menu for mobile view */}
-      <div
-        className="block md:hidden text-6xl m-2 text-center pb-3 relative"
-        onClick={() => {
-          menuactive ? setMenuactive(false) : setMenuactive(true);
-        }}
-        onBlur={() => setMenuactive(false)}
-      >
-        <span>&equiv;</span>
-        {menuactive && (
-          <div
-            id="dropdown"
-            className="flex flex-col absolute top-15 right-2 bg-white px-5 py-2 rounded-md shadow-xl swing-in-top"
-          >
-            <ul className="text-sm space-y-2">
-              <li
-                className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
-              >
-                <NavLink className="p-0" to="/">
-                  Home
+      {/* Updated mobile menu container with ref */}
+      <div className="block md:hidden relative" ref={dropdownRef}>
+        <button
+          onClick={() => setMenuactive(!menuactive)}
+          className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+          aria-label="Toggle menu"
+        >
+          <div className={`w-6 h-0.5 bg-gray-600 transition-all duration-300 ${menuactive ? 'transform rotate-45 translate-y-1.5' : ''}`}></div>
+          <div className={`w-6 h-0.5 bg-gray-600 mt-1.5 transition-all duration-300 ${menuactive ? 'opacity-0' : ''}`}></div>
+          <div className={`w-6 h-0.5 bg-gray-600 mt-1.5 transition-all duration-300 ${menuactive ? 'transform -rotate-45 -translate-y-1.5' : ''}`}></div>
+        </button>
+
+        {/* Updated dropdown menu */}
+        <div
+          className={`absolute top-full right-0 w-48 bg-white rounded-lg shadow-lg py-2 mt-2 transition-all duration-300 transform origin-top-right
+            ${menuactive ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}
+          `}
+        >
+          <ul className="text-sm divide-y divide-gray-100">
+            {[
+              { to: "/", label: "Home" },
+              { to: "/products", label: "Products" },
+              { to: "/featured", label: "Featured" },
+              { to: "/bestsellers", label: "Best Sellers" },
+            ].map((item) => (
+              <li key={item.label}>
+                <NavLink
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `block px-4 py-2 hover:bg-blue-50 transition-colors duration-200 ${
+                      isActive ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`
+                  }
+                >
+                  {item.label}
                 </NavLink>
               </li>
-              <li
-                className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
-              >
-                <NavLink className="p-0" to="/products">
-                  Products
-                </NavLink>
-              </li>
-              <li
-                className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
-              >
-                <NavLink className="p-0" to="/featured">
-                  Featured
-                </NavLink>
-              </li>
-              <li
-                className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
-              >
-                <NavLink className="p-0" to="/bestsellers">
-                  Best Sellers
-                </NavLink>
-              </li>
-              
-              {user.id !== 0 ? (
-                <>
-                  <li
-                    className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
+            ))}
+            
+            {user.id !== 0 ? (
+              <>
+                <li>
+                  <NavLink
+                    to="/profile"
+                    className={({ isActive }) =>
+                      `block px-4 py-2 hover:bg-blue-50 transition-colors duration-200 ${
+                        isActive ? 'text-blue-600 font-medium' : 'text-gray-700'
+                      }`
+                    }
                   >
-                    <NavLink className="p-0" to="/profile">
-                      Profile
-                    </NavLink>
-                  </li>
-                  <li
-                    className={`cursor-pointer text-red-500 hover:scale-105 hover:text-red-700 `}
-                    onClick={() => { handleLogout()}}
+                    Profile
+                  </NavLink>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors duration-200"
                   >
-                    LogOut
-                  </li>
-                </>
-              ) : (<li
-                className={`cursor-pointer hover:scale-105 hover:text-blue-500 `}
-              ><NavLink to="/signin" className="p-0">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li>
+                <NavLink
+                  to="/signin"
+                  className={({ isActive }) =>
+                    `block px-4 py-2 hover:bg-blue-50 transition-colors duration-200 ${
+                      isActive ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`
+                  }
+                >
                   Login
                 </NavLink>
-              </li>)}
-            </ul>
-          </div>
-        )}
+              </li>
+            )}
+          </ul>
+        </div>
       </div>
     </nav>
   );
