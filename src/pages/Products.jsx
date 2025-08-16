@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import ProductList from "../components/ProductList";
 import Loading from "../components/Loading";
-import useFetch from "../utils/helper/useFetch";
+// import useFetch from "../utils/helper/useFetch";
+import { useGetProductsQuery } from "../utils/redux/apiSlice";
 
 const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchBy, setSearchBy] = useState("name");
-  const { data, loading, error } =  useFetch("https://dummyjson.com/products?limit=60&skip=20");
-  
+  // const { data, error } =  useFetch("https://dummyjson.com/products?limit=60&skip=20");
+  const { data: data, error, isLoading: loadingApi } = useGetProductsQuery({ limit: 60, skip: 20 });
 //using useeffect to setfiltered products whenever the data changes
   useEffect(() => {
     if (data){
+      console.log(data);
       setFilteredProducts(data.products);
     }
   }, [data]);
@@ -36,7 +38,7 @@ const Products = () => {
     }
   };
 //showing loader while the data is being fetched
-  if (loading)
+  if (loadingApi)
     return (
       <div className="h-screen gap-4 w-screen flex items-center justify-center">
         <Loading />

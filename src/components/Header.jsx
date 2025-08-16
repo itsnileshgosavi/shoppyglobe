@@ -1,6 +1,6 @@
 import logo from "../assets/img/logo.png";
 import cart_icon from "../assets/img/cart_icon.png";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -77,16 +77,20 @@ const Header = () => {
   };
 
   return (
-    <nav className="flex justify-around items-center border shadow-md sticky top-0 left-0 right-0 bg-slate-50 z-50 uppercase">
-      <Link to="/">
-        <div className="flex items-center md:m-2 p-1 md:p-2 cursor-pointer">
-          <img src={logo} alt="logo" />
-          <h1 className="mx-3 text-lg lg:text-3xl font-sans font-extrabold">
+    // Update the main nav container
+    <nav className="flex flex-wrap justify-between md:justify-around items-center border shadow-md sticky top-0 left-0 right-0 bg-slate-50 z-50 uppercase px-4 py-2">
+      {/* Logo section - make it more responsive */}
+      <Link to="/" className="flex-shrink-0">
+        <div className="flex items-center p-1 md:p-2 cursor-pointer">
+          <img src={logo} alt="logo" className="h-8 md:h-10 w-auto" />
+          <h1 className="mx-2 md:mx-3 text-base md:text-lg lg:text-3xl font-sans font-extrabold truncate">
             ShoppyGlobe
           </h1>
         </div>
       </Link>
-      <ul className="hidden md:flex space-x-10 font-serif font-medium items-center">
+
+      {/* Desktop Menu - improved spacing */}
+      <ul className="hidden md:flex space-x-4 lg:space-x-10 font-serif font-medium items-center">
         <li className={`cursor-pointer hover:scale-105 hover:text-blue-500`}>
           <NavLink className="p-5" to="/">
             Home
@@ -131,19 +135,25 @@ const Header = () => {
           </NavLink>
         </li>)}
       </ul>
-      <div className="m-2 p-2 cursor-pointer relative">
+
+      {/* Cart Icon - make it responsive */}
+      <div className="flex-shrink-0 m-1 md:m-2 p-1 md:p-2 cursor-pointer relative">
         <NavLink to="/cart">
-          <img className="hover:scale-110" src={cart_icon} alt="cart icon" />
+          <img 
+            className="hover:scale-110 w-6 h-6 md:w-8 md:h-8" 
+            src={cart_icon} 
+            alt="cart icon" 
+          />
           {cartQuantity > 0 && (
-            <span className="absolute top-0 right-[15px] bg-green-500 p-1 font-bold text-lg text-white rounded-full w-5 h-5 flex justify-center items-center">
+            <span className="absolute -top-1 -right-1 bg-green-500 p-0.5 md:p-1 text-sm md:text-lg font-bold text-white rounded-full min-w-[20px] min-h-[20px] flex justify-center items-center">
               {cartQuantity}
             </span>
           )}
         </NavLink>
       </div>
 
-      {/* Updated mobile menu container with ref */}
-      <div className="block md:hidden relative" ref={dropdownRef}>
+      {/* Mobile Menu Button - adjust positioning */}
+      <div className="block md:hidden relative ml-2" ref={dropdownRef}>
         <button
           onClick={() => setMenuactive(!menuactive)}
           className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
@@ -153,73 +163,73 @@ const Header = () => {
           <div className={`w-6 h-0.5 bg-gray-600 mt-1.5 transition-all duration-300 ${menuactive ? 'opacity-0' : ''}`}></div>
           <div className={`w-6 h-0.5 bg-gray-600 mt-1.5 transition-all duration-300 ${menuactive ? 'transform -rotate-45 -translate-y-1.5' : ''}`}></div>
         </button>
+      </div>
 
-        {/* Updated dropdown menu */}
-        <div
-          className={`absolute top-full right-0 w-48 bg-white rounded-lg shadow-lg py-2 mt-2 transition-all duration-300 transform origin-top-right
-            ${menuactive ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}
-          `}
-        >
-          <ul className="text-sm divide-y divide-gray-100">
-            {[
-              { to: "/", label: "Home" },
-              { to: "/products", label: "Products" },
-              { to: "/featured", label: "Featured" },
-              { to: "/bestsellers", label: "Best Sellers" },
-            ].map((item) => (
-              <li key={item.label}>
-                <NavLink
-                  to={item.to}
-                  className={({ isActive }) =>
-                    `block px-4 py-2 hover:bg-blue-50 transition-colors duration-200 ${
-                      isActive ? 'text-blue-600 font-medium' : 'text-gray-700'
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-            
-            {user.id !== 0 ? (
-              <>
-                <li>
-                  <NavLink
-                    to="/profile"
-                    className={({ isActive }) =>
-                      `block px-4 py-2 hover:bg-blue-50 transition-colors duration-200 ${
-                        isActive ? 'text-blue-600 font-medium' : 'text-gray-700'
-                      }`
-                    }
-                  >
-                    Profile
-                  </NavLink>
-                </li>
-                <li>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors duration-200"
-                  >
-                    Logout
-                  </button>
-                </li>
-              </>
-            ) : (
+      {/* Mobile Menu Dropdown - improve responsiveness */}
+      <div
+        className={`absolute top-full right-0 w-full md:w-48 bg-white rounded-lg shadow-lg py-2 mt-2 transition-all duration-300 transform origin-top-right
+          ${menuactive ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}
+          mx-auto left-0 md:left-auto max-w-sm`}
+      >
+        <ul className="text-sm divide-y divide-gray-100">
+          {[
+            { to: "/", label: "Home" },
+            { to: "/products", label: "Products" },
+            { to: "/featured", label: "Featured" },
+            { to: "/bestsellers", label: "Best Sellers" },
+          ].map((item) => (
+            <li key={item.label}>
+              <NavLink
+                to={item.to}
+                className={({ isActive }) =>
+                  `block px-4 py-2 hover:bg-blue-50 transition-colors duration-200 ${
+                    isActive ? 'text-blue-600 font-medium' : 'text-gray-700'
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+          
+          {user.id !== 0 ? (
+            <>
               <li>
                 <NavLink
-                  to="/signin"
+                  to="/profile"
                   className={({ isActive }) =>
                     `block px-4 py-2 hover:bg-blue-50 transition-colors duration-200 ${
                       isActive ? 'text-blue-600 font-medium' : 'text-gray-700'
                     }`
                   }
                 >
-                  Login
+                  Profile
                 </NavLink>
               </li>
-            )}
-          </ul>
-        </div>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors duration-200"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <NavLink
+                to="/signin"
+                className={({ isActive }) =>
+                  `block px-4 py-2 hover:bg-blue-50 transition-colors duration-200 ${
+                    isActive ? 'text-blue-600 font-medium' : 'text-gray-700'
+                  }`
+                }
+              >
+                Login
+              </NavLink>
+            </li>
+          )}
+        </ul>
       </div>
     </nav>
   );

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import ProductList from '../components/ProductList';
 import Loading from '../components/Loading';
-import useFetch from '../utils/helper/useFetch';
+import { useGetProductsQuery } from '../utils/redux/apiSlice';
 
 
 
 const BestSellers = () => {
     const [products, setProducts] = useState([]);
 
-  const {data, loading, error} = useFetch('https://dummyjson.com/products?limit=8&skip=100');//fetching data from api using custom hook
+   const { data: data, error, isLoading: loading } = useGetProductsQuery({ limit: 8, skip: 100 }); //fetching data from api using custom hook
 
 //using useeffect to setproducts whenever the data changes
   useEffect(() => {
