@@ -1,26 +1,50 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import ProductList from "../components/ProductList";
 import Loading from "../components/Loading";
-// import useFetch from "../utils/helper/useFetch";
 import { useGetProductsQuery } from "../utils/redux/apiSlice";
 
 const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchBy, setSearchBy] = useState("name");
-  // const { data, error } =  useFetch("https://dummyjson.com/products?limit=60&skip=20");
-  const { data: data, error, isLoading: loadingApi } = useGetProductsQuery({ limit: 60, skip: 20 });
-//using useeffect to setfiltered products whenever the data changes
+  const [skip, setSkip] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const LIMIT = 20;
+
+  const {
+    data,
+    error,
+    isLoading: loadingApi,
+    isFetching,
+  } = useGetProductsQuery({ limit: LIMIT, skip }, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const observer = useRef();
+  const lastProductRef = useCallback((node) => {
+    if (loadingApi || isFetching) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setSkip(prevSkip => prevSkip + LIMIT);
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [loadingApi, isFetching, hasMore]);
+
   useEffect(() => {
-    if (data){
-      console.log(data);
+    if (data) {
+      if (data.products.length < LIMIT) {
+        setHasMore(false);
+      }
       setFilteredProducts(data.products);
     }
   }, [data]);
 
-
-
-  //Function to handle search
   const handleSearch = (e) => {
+    if (!data) return;
+    
     if (searchBy === "name") {
       setFilteredProducts(
         data.products.filter((product) =>
@@ -37,7 +61,8 @@ const Products = () => {
       );
     }
   };
-//showing loader while the data is being fetched
+
+  //showing loader while the data is being fetched
   if (loadingApi)
     return (
       <div className="h-screen gap-4 w-screen flex items-center justify-center">
@@ -101,7 +126,20 @@ const Products = () => {
       </div>
       <div>
         {error && <p className="text-red-500 text-xl">{error.message}</p>}
-        <ProductList products={filteredProducts} />
+        <ProductList 
+          products={filteredProducts} 
+          lastProductRef={lastProductRef}
+        />
+        {(loadingApi || isFetching) && (
+          <div className="flex justify-center p-4">
+            <Loading />
+          </div>
+        )}
+        {!hasMore && (
+          <p className="text-center text-gray-500 p-4">
+            No more products to load
+          </p>
+        )}
       </div>
     </div>
   );
